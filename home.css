@@ -1,0 +1,260 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Amatic SC", sans-serif;
+  font-family: "Poppins", sans-serif;
+  text-transform: capitalize;
+}
+
+a,
+li {
+  cursor: pointer;
+  color: gray;
+  list-style: none;
+  text-decoration: none;
+}
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* For WebKit Browsers (Chrome, Safari) */
+
+/* The main scrollbar */
+::-webkit-scrollbar {
+  display: none;
+  width: 12px;
+}
+
+/* Track (the area the thumb moves along) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle (the draggable part of the scrollbar) */
+::-webkit-scrollbar-thumb {
+  background: #ebebeb;
+  border-radius: 0px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.navbar {
+  height: 10vh;
+  /* background-color: brown; */
+  /* border: 1px solid black; */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 30px;
+  padding-right: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar ul,
+form {
+  display: flex;
+}
+
+.logo {
+  gap: 20px;
+}
+
+.menu {
+  color: black !important;
+  font-weight: 200 !important;
+  font-size: 30px !important;
+}
+
+#search {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border: 1px solid rgb(205, 205, 205);
+  border-right: none;
+  height: 40px;
+  width: 40vw;
+  padding-left: 20px;
+}
+
+#search:focus {
+  outline: none;
+}
+
+#search-btn {
+  padding-inline: 10px;
+  border: 1px solid rgb(205, 205, 205);
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.profile {
+  gap: 20px;
+}
+
+.profile a {
+  font-size: 25px !important;
+}
+
+.main {
+  max-height: 90vh;
+  width: 100vw;
+  display: flex;
+}
+
+.sidebar {
+  padding: 20px;
+  padding-top:0;
+  overflow-y: scroll;
+  bottom: 0;
+  left: 0;
+  position: sticky;
+  width: 20vw;
+  /* background-color: rgb(0, 160, 218); */
+  height: 100%;
+}
+
+.sidebar ul {
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.sidebar ul:first-child{
+  margin-top: 8px;
+}
+.sidebar ul li {
+  font-size: 14px;
+  font-weight: 200 !;
+  color: black;
+  padding: 5px;
+  padding-left: 20px;
+
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.sidebar ul li:hover {
+  background-color: #ededed;
+}
+
+#container {
+  /* background-color: chartreuse; */
+  overflow-y: scroll;
+  bottom: 0;
+  flex-grow: 1;
+  right: 0;
+  position: sticky;
+  overflow-y: scroll;
+  width: 80vw;
+  height: 100%;
+}
+.video-category{
+   padding: 10px;
+   width: max-content;
+   gap: 10px;
+   overflow: scroll;
+   display: flex;
+   align-items: stretch;
+   justify-content: space-between;
+}
+
+
+.video-category li:first-child{
+  padding-inline: 10px;
+  background-color: black;
+  color: white;
+}
+
+.video-category li{
+   color: black;
+   font-size: 14px;
+   border-radius: 5px;
+   padding: 4px;
+   padding-inline: 4px;
+   background-color: #f2f2f2;
+   width: fit-content;
+}
+.video-category li:hover{
+   background-color: #dcdbdb;
+}
+#videoList{
+   grid-gap: 25px;
+   display: grid;
+   grid-template-columns: 1fr 1fr 1fr;
+   padding: 20px;
+   padding-inline: 30px;
+   width: 100%;
+ 
+}
+.videoprofile{
+  cursor: pointer;
+   display: flex;
+   flex-direction: column;
+   /* width: 30%; */
+  height: fit-content;
+   /* background-color: dodgerblue; */
+
+}
+.videoprofile:hover{
+  box-shadow: 0px 0px 51px -9px;
+  /* background-color: rgb(234, 234, 234); */
+  border-radius:10px;
+ /* border: .5px solid rgb(224, 224, 224); */
+}
+
+#thumbnail{
+   width: 100%;
+}
+
+.thumbnail img{
+   border-radius: 8px;
+   border-bottom-left-radius: 0;
+   border-bottom-right-radius: 0;
+   object-fit: cover;
+   width: 100%;
+   height: 164px !important;
+}
+.discription{
+   padding-inline: 10px;
+   gap: 25px;
+   justify-content:left;
+   display: flex;
+
+}
+.discription img{
+   border-radius: 50%;
+   height: 35px;
+   width: 35px;
+}
+
+.title{
+  word-wrap: break-word;
+  font-size: 14px;
+  color: black;
+  width: 98%;
+  height: fit-content;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* white-space: nowrap; */
+}
+
+.channeltitle{
+  padding-left: 68px;
+  color: #8a8a8a;
+  font-size: 13px;
+}

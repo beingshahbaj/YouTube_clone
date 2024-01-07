@@ -1,0 +1,19 @@
+
+.main-container{
+    gap: 15px;
+    overflow: hidden;
+   
+    display: flex;
+    margin-top: 15px;
+    margin-inline: 25px;
+}
+#videoPlayer{
+
+    top: 0;
+    position: sticky;
+    border-radius: 15px;
+}
+
+.suggest-video-list{
+width: 33%;
+}
