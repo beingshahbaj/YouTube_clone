@@ -6,7 +6,13 @@
   font-family: "Poppins", sans-serif;
   text-transform: capitalize;
 }
+body {
+  height: 100vh;
+  width: 100vw;
 
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 a,
 li {
   cursor: pointer;
@@ -115,14 +121,14 @@ form {
 
 .sidebar {
   padding: 20px;
-  padding-top:0;
+  padding-top: 0;
   overflow-y: scroll;
   bottom: 0;
   left: 0;
   position: sticky;
   width: 20vw;
   /* background-color: rgb(0, 160, 218); */
-  height: 100%;
+  height: 100vh;
 }
 
 .sidebar ul {
@@ -132,7 +138,7 @@ form {
   margin-bottom: 15px;
   margin-top: 15px;
 }
-.sidebar ul:first-child{
+.sidebar ul:first-child {
   margin-top: 8px;
 }
 .sidebar ul li {
@@ -153,95 +159,92 @@ form {
 
 #container {
   /* background-color: chartreuse; */
-  overflow-y: scroll;
+  overflow-x: hidden;
   bottom: 0;
   flex-grow: 1;
   right: 0;
   position: sticky;
   overflow-y: scroll;
   width: 80vw;
-  height: 100%;
+  height: 100vh;
 }
-.video-category{
-   padding: 10px;
-   width: max-content;
-   gap: 10px;
-   overflow: scroll;
-   display: flex;
-   align-items: stretch;
-   justify-content: space-between;
+.video-category {
+  padding: 10px;
+  width: auto;
+  gap: 10px;
+  overflow-x: auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
 }
 
-
-.video-category li:first-child{
+.video-category li:first-child {
   padding-inline: 10px;
   background-color: black;
   color: white;
 }
 
-.video-category li{
-   color: black;
-   font-size: 14px;
-   border-radius: 5px;
-   padding: 4px;
-   padding-inline: 4px;
-   background-color: #f2f2f2;
-   width: fit-content;
+.video-category li {
+  display: inline-block;
+  color: black;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 4px;
+  padding-inline: 4px;
+  background-color: #f2f2f2;
+  width: max-content;
 }
-.video-category li:hover{
-   background-color: #dcdbdb;
+.video-category li:hover {
+  background-color: #dcdbdb;
 }
-#videoList{
-   grid-gap: 25px;
-   display: grid;
-   grid-template-columns: 1fr 1fr 1fr;
-   padding: 20px;
-   padding-inline: 30px;
-   width: 100%;
- 
+#videoList {
+  grid-gap: 25px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 20px;
+  padding-inline: 30px;
+  width: 100%;
 }
-.videoprofile{
+.videoprofile {
   cursor: pointer;
-   display: flex;
-   flex-direction: column;
-   /* width: 30%; */
+  display: flex;
+  flex-direction: column;
+  /* width: 30%; */
   height: fit-content;
-   /* background-color: dodgerblue; */
-
+  /* background-color: dodgerblue; */
 }
-.videoprofile:hover{
-  box-shadow: 0px 0px 51px -9px;
+.videoprofile:hover {
+  box-shadow: 0px 0px 51px -9px rgba(0, 0, 0, 0.733);
   /* background-color: rgb(234, 234, 234); */
-  border-radius:10px;
- /* border: .5px solid rgb(224, 224, 224); */
+  border-radius: 10px;
+  /* border: .5px solid rgb(224, 224, 224); */
 }
 
-#thumbnail{
-   width: 100%;
+#thumbnail {
+  width: 100%;
 }
 
-.thumbnail img{
-   border-radius: 8px;
-   border-bottom-left-radius: 0;
-   border-bottom-right-radius: 0;
-   object-fit: cover;
-   width: 100%;
-   height: 164px !important;
+.thumbnail img {
+  border-radius: 8px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 164px !important;
 }
-.discription{
-   padding-inline: 10px;
-   gap: 25px;
-   justify-content:left;
-   display: flex;
+.discription {
+  padding-inline: 10px;
+  gap: 25px;
+  justify-content: left;
+  display: flex;
+}
+.discription img {
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+}
 
-}
-.discription img{
-   border-radius: 50%;
-   height: 35px;
-   width: 35px;
-}
-
-.title{
+.title {
   word-wrap: break-word;
   font-size: 14px;
   color: black;
@@ -253,8 +256,24 @@ form {
   /* white-space: nowrap; */
 }
 
-.channeltitle{
+.channeltitle {
   padding-left: 68px;
   color: #8a8a8a;
   font-size: 13px;
 }
+
+.title-count {
+  align-items: center;
+  font-size: 13px;
+  gap: 10px;
+  padding: 0 !important;
+  color: #8a8a8a;
+
+  display: inline-flex;
+}
+
+.active {
+  background-color: rgba(0, 0, 0, 0.652) !important;
+  color: white !important;
+}
+

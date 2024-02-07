@@ -1,221 +1,238 @@
-// const API = "AIzaSyBzSTXIrBHXKoQPLmhHTeGL87z-DyGUYBY";
-// const API = "AIzaSyDa95KzoCkJIH-3CILO7QsE67ufMF7bkLM";
-const API = "AIzaSyD8O_WLqEMxyxPXQzgKQo6taUE2REbw5Wk";
+const API_KEY = "AIzaSyBzSTXIrBHXKoQPLmhHTeGL87z-DyGUYBY";
+// const API_KEY = "AIzaSyDa95KzoCkJIH-3CILO7QsE67ufMF7bkLM";
+// const API_KEY = "AIzaSyD8O_WLqEMxyxPXQzgKQo6taUE2REbw5Wk";
+
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
+
 const videoList = document.getElementById("videoList");
+const searchBtn = document.getElementById("search-btn");
+const searchInput = document.getElementById("search");
+const videoCategory = document.querySelector(".video-category");
 
-const details = "contentDetails";
-const stats = "statistic";
-const thumb = document.querySelector("thumbnail");
 
-document.addEventListener("DOMContentLoaded", function () {
-  fetchVideo("all", 50);
-  //
-  addavideoCategory();
+document.addEventListener("DOMContentLoaded", () => {
+  fetchVideos("all", 50);
+  addVideoCategory();
 });
 
-const searchBtn = document.getElementById("search-btn");
-
 searchBtn.addEventListener("click", () => {
-  
-  let searchInput = document.getElementById("search").value;
-  searchVideos(searchInput);
-})
+  searchVideos();
+});
 
-async function searchVideos(searchInput) {
-  if (searchInput.trim() !== "") {
-    // Clear existing video list
-    document.getElementById("videoList").innerHTML = "";
+
+async function fetchVideos(searchQuery, maxResults) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/search?key=${API_KEY}&q=${searchQuery}&maxResults=${maxResults}&part=snippet`
+    );
     
-    // Fetch videos based on the search query
-    await fetchVideo(searchInput, 50);
+    const data = await response.json();
+    renderVideos(data.items);
+  } catch (error) {
+    console.error("Error fetching videos:", error.message);
   }
 }
 
 
-
-
-
-
-async function fetchVideo(searchQuery, maxResult) {
-  const response = await fetch(
-    `${BASE_URL}/search?key=${API}&q=${searchQuery}&maxResults=${maxResult}&part=snippet`
-  );
-  const data = await response.json();
-
-  renderVideo(data.items);
-}
-
-async function renderVideo(list) {
-  for (let video of list) {
-    const logo = await getChannelLogo(video.snippet.channelId);
-    const isoTimestamp = video.snippet.publishTime;
-    const date = new Date(isoTimestamp);
-    const now = new Date();
-
-    const timeDiffInSeconds = Math.floor((now - date) / 1000);
-
-    let formattedTime;
-
-    if (timeDiffInSeconds < 60) {
-      formattedTime = "Just now";
-    } else if (timeDiffInSeconds < 3600) {
-      const minutes = Math.floor(timeDiffInSeconds / 60);
-      formattedTime = `${minutes} ${minutes > 1 ? "minutes" : "minute"} ago`;
-    } else if (timeDiffInSeconds < 86400) {
-      const hours = Math.floor(timeDiffInSeconds / 3600);
-      formattedTime = `${hours} ${hours > 1 ? "hours" : "hour"} ago`;
-    } else if (timeDiffInSeconds < 2592000) {
-      const days = Math.floor(timeDiffInSeconds / 86400);
-      formattedTime = `${days} ${days > 1 ? "days" : "day"} ago`;
-    } else if (timeDiffInSeconds < 31536000) {
-      const months = Math.floor(timeDiffInSeconds / 2592000);
-      formattedTime = `${months} ${months > 1 ? "months" : "month"} ago`;
-    } else {
-      const months = date.getMonth() + 1;
-      const years = now.getFullYear() - date.getFullYear();
-      formattedTime = `${years > 1 ? years + " years" : "a year"}`;
-    }
-
-    const viewCount = await getVideoViewCount(video.id.videoId);
-
-    const videoProfile = document.createElement("div");
-    videoProfile.classList.add("videoprofile");
-    videoProfile.dataset.videoId = video.id.videoId;
-    videoProfile.dataset.videoTitle = video.snippet.title;
-    videoProfile.dataset.videoChannel = video.snippet.channelTitle;
-
-    videoProfile.innerHTML = `<div class="thumbnail">
-              <img  src="${video.snippet.thumbnails.high.url}" alt="">
-          </div>
-          <div class="discription">
-              <div class="channel-logo">
-                  <img src="${logo}" alt="Channel Logo">
-              </div>
-              <a href="#" class="title">${video.snippet.title}</a>
-          </div>
-          <div class="channeltitle">${video.snippet.channelTitle}</div>
-           <div class="channeltitle">${formattedTime}  </div>`;
-
-    videoProfile.addEventListener("click", function () {
-      const videoId = this.dataset.videoId; 
-      const videoTitle = this.dataset.videoTitle; 
-      const videoChannel = this.dataset.videoChannel; 
-
-      // Store selected video information in sessionStorage
-      sessionStorage.setItem(
-        "selectedVideo",
-        JSON.stringify({
-          videoId: videoId,
-          videoTitle: videoTitle,
-          videoChannel: videoChannel,
-        })
-      );
-
-      // Redirect to the videoplayer.html page
-      window.location.href = "videoplayer.html";
-    });
-
+async function renderVideos(videos) {
+  for (const video of videos) {
+    const videoProfile = await createVideoProfile(video);
     videoList.appendChild(videoProfile);
   }
 }
 
-async function getVideoViewCount(videoId) {
-  const response = await fetch(
-    `${BASE_URL}/videos?key=${API}&part=statistics&id=${videoId}`
-  );
-  const data = await response.json();
-  return data;
+
+async function createVideoProfile(video) {
+  const videoProfile = document.createElement("div");
+  videoProfile.classList.add("videoprofile");
+  const viewCount = await getVideoViewCount(video.id.videoId);
+  const logo = await getChannelLogo(video.snippet.channelId);
+
+  videoProfile.dataset.videoId = video.id.videoId;
+  videoProfile.dataset.videoTitle = video.snippet.title;
+  videoProfile.dataset.videoChannel = video.snippet.channelTitle;
+  videoProfile.dataset.channellogo = logo
+ 
+  const formattedTime = formatPublishTime(video.snippet.publishTime);
+
+  videoProfile.innerHTML = `
+        <div class="thumbnail">
+            <img src="${video.snippet.thumbnails.high.url}" alt="">
+        </div>
+        <div class="discription">
+            <div class="channel-logo">
+                <img src="${logo}" alt="Channel Logo">
+            </div>
+            <a href="#" class="title">${video.snippet.title}</a>
+        </div>
+         <div class="channeltitle">${video.snippet.channelTitle}</div>
+       <div class = "title-count">
+        <div class="channeltitle">${formattedTime}</div>
+        <div class=""> view :${" " + viewCount}</div>
+        </div>
+       
+    `;
+
+  videoProfile.addEventListener("click", () => {
+    const videoId = videoProfile.dataset.videoId;
+    const videoTitle = videoProfile.dataset.videoTitle;
+    const videoChannel = videoProfile.dataset.videoChannel;
+    const channellogo = videoProfile.dataset.channellogo;
+
+    console.log(channellogo)
+    sessionStorage.setItem(
+      "selectedVideo",
+      JSON.stringify({
+        videoId,
+        videoTitle,
+        videoChannel,
+        channellogo
+      })
+    );
+
+    window.location.href = "videoplayer.html";
+  });
+
+  return videoProfile;
 }
 
-// views ${viewCount.items[0].statistics.viewCount}
 
 async function getChannelLogo(channelId) {
   const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${API}`
+    `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=${API_KEY}`
   );
 
   const data = await response.json();
+
   const url = data.items[0].snippet.thumbnails.default.url;
   return url;
 }
 
-// async function getVideoStatus(videoId, contentDetails) {
-//   const response = await fetch(
-//     `${BASE_URL}/videos?key=${API}&part=${contentDetails}&id=${videoId}`
-//   );
+async function getVideoViewCount(videoId) {
+  const response = await fetch(
+    `${BASE_URL}/videos?key=${API_KEY}&part=statistics&id=${videoId}`
+  );
+  const data = await response.json();
+  const viewCount = data.items[0].statistics.viewCount;
+  return viewCount;
+}
 
-//   const data = await response.json();
-//   console.log(data);
-// }
 
-// getVideoStatus("3YJvtBqhEJ0", stats);
+function formatPublishTime(isoTimestamp) {
+  const date = new Date(isoTimestamp);
+  const now = new Date();
+  const timeDiffInSeconds = Math.floor((now - date) / 1000);
 
-const youtubeCategories = [
-  "All",
-  "Music",
-  "Gaming",
-  "News",
-  "Movies",
-  "TV Shows",
-  "Comedy",
-  "Education",
-  "Science & Technology",
-  "Sports",
-  "Travel",
-  "Food",
-  "Health & Fitness",
-  "Fashion",
-  "Beauty",
-  "Home & Garden",
-  "Pets & Animals",
-  "Vehicles",
-  "Business & Finance",
-  "Technology",
-  "Science",
-  "Art & Creativity",
-  "How-to & DIY",
-  "Entertainment",
-  "Family & Kids",
-  "Books & Literature",
-  "History",
-  "Philosophy",
-  "Religion",
-  "Spirituality",
-  "Nature",
-  "Documentaries",
-  "Social Issues",
-  "Lifestyle",
-  "Gadgets & Gear",
-  "Reviews",
-  "Unboxing",
-  "Events",
-  "Conspiracy Theories",
-  "Fitness & Workouts",
-  "Do It Yourself (DIY)",
-  "Cooking & Recipes",
-  "Gardening",
-  "Travel Guides",
-  "Motivation",
-  "Productivity",
-  "Languages",
-  "Photography",
-  "Virtual Reality (VR)",
-];
-const videoCategory = document.querySelector(".video-category");
-function addavideoCategory() {
-  youtubeCategories.forEach((i) => {
-    const item = document.createElement("li");
-    item.innerHTML = i;
-    // item.addEventListener("click", () => {
-    //   document.getElementById("videoList").innerHTML = "";
-    //   let searchInput = document.getElementById("search").value;
+  if (timeDiffInSeconds < 60) return "Just now";
+  else if (timeDiffInSeconds < 3600)
+    return `${Math.floor(timeDiffInSeconds / 60)} minute${
+      timeDiffInSeconds >= 120 ? "s" : ""
+    } ago`;
+  else if (timeDiffInSeconds < 86400)
+    return `${Math.floor(timeDiffInSeconds / 3600)} hour${
+      timeDiffInSeconds >= 7200 ? "s" : ""
+    } ago`;
+  else if (timeDiffInSeconds < 2592000)
+    return `${Math.floor(timeDiffInSeconds / 86400)} day${
+      timeDiffInSeconds >= 172800 ? "s" : ""
+    } ago`;
+  else if (timeDiffInSeconds < 31536000)
+    return `${Math.floor(timeDiffInSeconds / 2592000)} month${
+      timeDiffInSeconds >= 5184000 ? "s" : ""
+    } ago`;
+  else
+    return `${now.getFullYear() - date.getFullYear()} year${
+      now.getFullYear() - date.getFullYear() > 1 ? "s" : ""
+    } ago`;
+}
 
-    //   searchVideos(searchInput);
-      
-    // })
+
+function searchVideos() {
+  const searchQuery = searchInput.value.trim();
+  if (searchQuery !== "") {
+    videoList.innerHTML = ""; 
+    fetchVideos(searchQuery, 50);
+  }
+}
+
+
+function addVideoCategory() {
+  const youtubeCategories = [
+    "All",
+    "Music",
+    "Gaming",
+    "News",
+    "Movies",
+    "TV Shows",
+    "Comedy",
+    "Education",
+    "Science & Technology",
+    "Sports",
+    "Travel",
+    "Food",
+    "Health & Fitness",
+    "Fashion",
+    "Beauty",
+    "Home & Garden",
+    "Pets & Animals",
+    "Vehicles",
+    "Business & Finance",
+    "Technology",
+    "Science",
+    "Art & Creativity",
+    "How-to & DIY",
+    "Entertainment",
+    "Family & Kids",
+    "Books & Literature",
+    "History",
+    "Philosophy",
+    "Religion",
+    "Spirituality",
+    "Nature",
+    "Documentaries",
+    "Social Issues",
+    "Lifestyle",
+    "Gadgets & Gear",
+    "Reviews",
+    "Unboxing",
+    "Events",
+    "Conspiracy Theories",
+    "Fitness & Workouts",
+    "Do It Yourself (DIY)",
+    "Cooking & Recipes",
+    "Gardening",
+    "Travel Guides",
+    "Motivation",
+    "Productivity",
+    "Languages",
+    "Photography",
+    "Virtual Reality (VR)",
+  ];
+
+  const listItems = youtubeCategories.map((category) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = category;
+    listItem.addEventListener("click", () => {
+     
+      listItems.forEach((item) => {
+        item.classList.remove("active");
+      });
+     
+      listItem.classList.add("active");
+
+      searchInput.value = "";
+      const search = listItem.textContent;
+      searchInput.value = search;
+      searchVideos();
+      searchInput.value = "";
+    });
+    return listItem;
+  });
+
+  
+  listItems.forEach((item) => {
     videoCategory.appendChild(item);
   });
 }
