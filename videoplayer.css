@@ -1,7 +1,7 @@
 
 .main-container{
     gap: 15px;
-    overflow: hidden;
+    
    
     display: flex;
     margin-top: 15px;
@@ -10,7 +10,7 @@
 #videoPlayer{
 
     top: 0;
-    position: sticky;
+   
     border-radius: 15px;
 }
 
@@ -19,12 +19,13 @@ width: 33%;
 }
 
 
-#comments-container {
+
+#comments-container , #video-discription {
   width: 100%;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 15px;
   background-color: #f9f9f9;
 }
 
@@ -35,3 +36,40 @@ width: 33%;
 .comment p {
   margin: 5px 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* // const API_KEY = "AIzaSyBzSTXIrBHXKoQPLmhHTeGL87z-DyGUYBY";
+// const API_KEY = "AIzaSyDa95KzoCkJIH-3CILO7QsE67ufMF7bkLM";
+// const API_KEY = "AIzaSyD8O_WLqEMxyxPXQzgKQo6taUE2REbw5Wk";
+const API_KEY = "AIzaSyDfFiYo-dm_pODDxIHEQPAm8zpTFJ6ybJM"; */

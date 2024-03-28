@@ -1,19 +1,17 @@
-const API_KEY = "AIzaSyBzSTXIrBHXKoQPLmhHTeGL87z-DyGUYBY";
+// const API_KEY = "AIzaSyBzSTXIrBHXKoQPLmhHTeGL87z-DyGUYBY";
 // const API_KEY = "AIzaSyDa95KzoCkJIH-3CILO7QsE67ufMF7bkLM";
-// const API_KEY = "AIzaSyD8O_WLqEMxyxPXQzgKQo6taUE2REbw5Wk";
-
+const API_KEY = "AIzaSyD8O_WLqEMxyxPXQzgKQo6taUE2REbw5Wk";
 
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
-
 
 const videoList = document.getElementById("videoList");
 const searchBtn = document.getElementById("search-btn");
 const searchInput = document.getElementById("search");
 const videoCategory = document.querySelector(".video-category");
-
+const videosuggestion = document.getElementById("video-suggestions");
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetchVideos("all", 50);
+  fetchVideos("all", 10);
   addVideoCategory();
 });
 
@@ -21,13 +19,12 @@ searchBtn.addEventListener("click", () => {
   searchVideos();
 });
 
-
 async function fetchVideos(searchQuery, maxResults) {
   try {
     const response = await fetch(
       `${BASE_URL}/search?key=${API_KEY}&q=${searchQuery}&maxResults=${maxResults}&part=snippet`
     );
-    
+
     const data = await response.json();
     renderVideos(data.items);
   } catch (error) {
@@ -35,14 +32,12 @@ async function fetchVideos(searchQuery, maxResults) {
   }
 }
 
-
 async function renderVideos(videos) {
   for (const video of videos) {
     const videoProfile = await createVideoProfile(video);
     videoList.appendChild(videoProfile);
   }
 }
-
 
 async function createVideoProfile(video) {
   const videoProfile = document.createElement("div");
@@ -53,8 +48,8 @@ async function createVideoProfile(video) {
   videoProfile.dataset.videoId = video.id.videoId;
   videoProfile.dataset.videoTitle = video.snippet.title;
   videoProfile.dataset.videoChannel = video.snippet.channelTitle;
-  videoProfile.dataset.channellogo = logo
- 
+  videoProfile.dataset.channellogo = logo;
+
   const formattedTime = formatPublishTime(video.snippet.publishTime);
 
   videoProfile.innerHTML = `
@@ -81,23 +76,22 @@ async function createVideoProfile(video) {
     const videoChannel = videoProfile.dataset.videoChannel;
     const channellogo = videoProfile.dataset.channellogo;
 
-    console.log(channellogo)
     sessionStorage.setItem(
       "selectedVideo",
       JSON.stringify({
         videoId,
         videoTitle,
         videoChannel,
-        channellogo
+        channellogo,
       })
     );
 
     window.location.href = "videoplayer.html";
   });
 
+  // console.log(videoProfile);
   return videoProfile;
 }
-
 
 async function getChannelLogo(channelId) {
   const response = await fetch(
@@ -118,7 +112,6 @@ async function getVideoViewCount(videoId) {
   const viewCount = data.items[0].statistics.viewCount;
   return viewCount;
 }
-
 
 function formatPublishTime(isoTimestamp) {
   const date = new Date(isoTimestamp);
@@ -148,15 +141,13 @@ function formatPublishTime(isoTimestamp) {
     } ago`;
 }
 
-
 function searchVideos() {
   const searchQuery = searchInput.value.trim();
   if (searchQuery !== "") {
-    videoList.innerHTML = ""; 
-    fetchVideos(searchQuery, 50);
+    videoList.innerHTML = "";
+    fetchVideos(searchQuery, 10);
   }
 }
-
 
 function addVideoCategory() {
   const youtubeCategories = [
@@ -173,53 +164,16 @@ function addVideoCategory() {
     "Travel",
     "Food",
     "Health & Fitness",
-    "Fashion",
-    "Beauty",
-    "Home & Garden",
-    "Pets & Animals",
-    "Vehicles",
-    "Business & Finance",
-    "Technology",
-    "Science",
-    "Art & Creativity",
-    "How-to & DIY",
-    "Entertainment",
-    "Family & Kids",
-    "Books & Literature",
-    "History",
-    "Philosophy",
-    "Religion",
-    "Spirituality",
-    "Nature",
-    "Documentaries",
-    "Social Issues",
-    "Lifestyle",
-    "Gadgets & Gear",
-    "Reviews",
-    "Unboxing",
-    "Events",
-    "Conspiracy Theories",
-    "Fitness & Workouts",
-    "Do It Yourself (DIY)",
-    "Cooking & Recipes",
-    "Gardening",
-    "Travel Guides",
-    "Motivation",
-    "Productivity",
-    "Languages",
-    "Photography",
-    "Virtual Reality (VR)",
   ];
 
   const listItems = youtubeCategories.map((category) => {
     const listItem = document.createElement("li");
     listItem.textContent = category;
     listItem.addEventListener("click", () => {
-     
       listItems.forEach((item) => {
         item.classList.remove("active");
       });
-     
+
       listItem.classList.add("active");
 
       searchInput.value = "";
@@ -231,8 +185,21 @@ function addVideoCategory() {
     return listItem;
   });
 
-  
   listItems.forEach((item) => {
     videoCategory.appendChild(item);
   });
 }
+
+// theam.style.display = "none";
+const text = document.querySelectorAll(
+  ".sidebar li , span , a , p, h1 , div #videoList div"
+);
+
+const theam = document.getElementById("theam");
+
+theam.addEventListener("click", async () => {
+  document.body.classList.toggle("dark");
+  for (let i = 0; i < text.length; i++) {
+    text[i].classList.toggle("white");
+  }
+});
