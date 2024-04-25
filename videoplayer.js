@@ -5,8 +5,6 @@ window.addEventListener("load", function () {
     const { videoId, videoTitle, videoChannel, channellogo } =
       JSON.parse(selectedVideoInfo);
 
-    console.log(videoId, videoTitle, channellogo);
-
     fetchComments(videoId)
       .then((comments) => {
         displayComments(comments);
@@ -48,7 +46,7 @@ async function fetchComments(VIDEO_ID) {
 }
 
 function onPlayerReady(event) {
-  // event.target.playVideo();
+  event.target.playVideo();
 }
 
 var done = false;
